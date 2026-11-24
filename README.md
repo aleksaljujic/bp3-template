@@ -21,6 +21,7 @@ with your own domain and keep the workflow.
 
 | Folder / file | Purpose |
 |---|---|
+| `inputs/` | Photos or scans of your own business documents and assignment pages; the start of a new project. Git-ignored except its README (what the agent does with them). |
 | `assignments/` | Generic versions of the three assignments: task, deliverables checklist, notes. |
 | `prompts/` | Reusable AI-assistant prompts used to produce the specs and scripts. |
 | `spec/` | Detailed specs (requirements, test tables, acceptance checklists) the scripts are built from. |
@@ -108,6 +109,40 @@ Use another container name: `CONTAINER=my-oracle ./run_all.sh`.
 
 `00b_reset_part3.sql` undoes the logical optimization of 06 (drops T6, T7, P1, the column and the
 CHECK, restores the lookup table). It is not run by default: `./run_all.sh 00b_reset_part3`.
+
+## Starting from photos of your own documents
+
+You can start a new project from photos or scans of your business documents (orders, invoices,
+delivery notes, ...) and of your course assignments. Claude Code reads images (JPG, PNG, PDF), so
+it can derive the model from them. From the point where your `01_tables.sql` and `02_data.sql`
+exist, the rest follows the normal `/spec` workflow.
+
+1. Put the photos in `inputs/`: one file per business document, plus the assignment pages.
+   Naming and what the agent does with each file: [`inputs/README.md`](inputs/README.md).
+   Black out personal data (names, addresses, tax IDs) first. The folder contents are git-ignored.
+2. Ask Claude Code, for example:
+
+   ```text
+   Read all images in inputs/. Fill the placeholders in assignments/*.md from the assignment
+   pages. Then write spec/00_domain.md (Status: Draft): one entry per business document with
+   its entities and attributes, the relational model with PK/FK, and open questions about
+   anything unreadable or ambiguous. Follow spec/00_spec_workflow.md and stop for my approval.
+   ```
+
+3. Review `spec/00_domain.md` and set it to `Approved` yourself.
+4. Ask Claude to replace the example: rewrite `queries/01_tables.sql` and `02_data.sql` from the
+   approved spec, update `00_reset.sql`, the conceptual and relational diagrams in `diagrams/`
+   and `explanations/01_database_design.md`, and remove the orders/invoicing example from
+   `03`..`11`, `spec/`, `prompts/` and `expected_errors.txt`. If you want to keep the example as
+   a reference, ask to move it to a separate folder instead of deleting it.
+5. Part 2: ask for a spec that proposes the denormalizations (one 2NF, one 3NF through 2+
+   levels, triggers) for your tables, then run `/spec spec/<that spec>.md`.
+6. Part 3: adapt `prompts/01_logical_optimization.md` and `02_physical_optimization.md` to your
+   tables and run `/spec prompts/01_logical_optimization.md` (and `02_...`).
+7. Reset `report/STRUCTURE.md` (and, if you want it, ask for the `.docx` chapters) for your domain.
+
+> Planned: a dedicated `prompts/00_from_documents.md` / `/new-project` skill that does steps 1-4
+> in one command. Until then use the prompt above.
 
 ## Adapting the template to your own project
 

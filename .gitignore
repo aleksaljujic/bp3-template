@@ -17,3 +17,8 @@ results/*.log
 # OS files
 .DS_Store
 Thumbs.db
+
+# Source photos/scans of the student's documents (may contain personal data)
+inputs/*
+!inputs/README.md
+!inputs/.gitkeep
