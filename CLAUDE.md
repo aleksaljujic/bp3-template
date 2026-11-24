@@ -18,6 +18,7 @@ Use `/spec` to drive it.
 | `queries/` | SQL scripts `00`..`11`, `00b_reset_part3.sql`, example queries |
 | `results/` | Generated output of `run_all.sh` (git-ignored except README and .gitkeep) |
 | `explanations/` | Defense and study notes |
+| `report/` | Master report `BP3_projekat.docx`; `STRUCTURE.md` maps its chapters to repo files |
 | `.claude/` | Claude Code config: `/spec` skill, subagents, shared permissions |
 | `run_all.sh`, `docker-compose.yml`, `.env.example`, `SETUP.md` | Runner, containers, setup guide |
 
@@ -56,6 +57,14 @@ Use `/spec` to drive it.
   `00b_reset_part3.sql` when adding objects.
 - DDL commits implicitly in Oracle: `ROLLBACK` does not undo it (also for procedures that run DDL).
   State the side effect in the spec and restore state explicitly in tests.
+
+## Report-driven updates
+
+- `report/BP3_projekat.docx` is the master report; its chapters are the unit of work. Before a
+  change, find the chapter in `report/STRUCTURE.md`; after it, update that chapter's status and
+  remind the human to add a version row (next `X.Y`, date, description) to the report's change table.
+- Keep the file name stable (no `_vX.Y`). Do not edit the `.docx` unless the human asks.
+- Code in the report and in `queries/` must match (same labels D#, T#, P#, I#).
 
 ## Rules
 

@@ -32,6 +32,7 @@ with your own domain and keep the workflow.
 | `.vscode/extensions.json`, `.gitattributes` | Recommended VS Code extensions; LF line endings for `.sh` / `.sql`. |
 | `run_all.sh` | Runs the scripts in order and writes `results/<script>.txt`. |
 | `check_results.sh`, `expected_errors.txt` | Compares `results/*.txt` with the expected Oracle errors per script (PASS/FAIL, `-v` for details). |
+| `report/` | Master report `BP3_projekat.docx` and `STRUCTURE.md` (chapter -> repo files map, status, version log). Its chapters drive project updates. |
 | `diagrams/` | Mermaid diagrams for the report: one conceptual model per business document and the relational model after each part (viewing, Draw.io and PNG export in its README). |
 | `.github/` | GitHub Actions workflow: runs `run_all.sh` and `check_results.sh` against an Oracle service container (see `.github/README.md`). |
 | `.claude/`, `CLAUDE.md` | Claude Code setup: project instructions, the `/spec` skill (spec workflow), subagents `sql-writer`, `test-writer`, `reviewer`, shared permissions. |
