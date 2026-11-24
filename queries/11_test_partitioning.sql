@@ -42,8 +42,8 @@ SELECT InvoiceNo FROM Invoice
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY(NULL, NULL, 'BASIC +PREDICATE +PARTITION'));
 
 -- =====================================================================
--- Test 3: moving a row between partitions (ROW MOVEMENT is enabled for
--- interval partitioned tables that were converted ONLINE; if not, ORA-14402)
+-- Test 3: moving a row between partitions (10_partitioning.sql enables
+-- ROW MOVEMENT on Invoice; without it the update fails with ORA-14402)
 -- EXPECTED: the update succeeds and the row is found by the new date
 -- =====================================================================
 UPDATE Invoice SET IssueDate = DATE '2027-05-10' WHERE InvoiceNo = 'T-I-0001';

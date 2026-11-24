@@ -96,6 +96,10 @@ BEGIN
   END IF;
 END;
 /
+-- Without ROW MOVEMENT an UPDATE of IssueDate that moves a row to another
+-- partition fails with ORA-14402. The conversion does not enable it, so it is
+-- enabled explicitly (re-runnable: enabling it twice is not an error).
+ALTER TABLE Invoice ENABLE ROW MOVEMENT;
 
 -- The conversion may mark triggers that modify Invoice as INVALID. Oracle would
 -- recompile them on first use; here it is done explicitly, so the final check
