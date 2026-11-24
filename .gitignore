@@ -1,0 +1,19 @@
+# Generated output (keep the folder docs)
+results/*.txt
+results/*.log
+*.log
+!results/README.md
+!results/.gitkeep
+
+# Secrets / local config
+.env
+
+# IDE folders
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db

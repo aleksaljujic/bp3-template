@@ -1,0 +1,67 @@
+# One database engine at a time, selected with a compose profile:
+#   docker compose --profile oracle   up -d     # Oracle Database 23ai Free  (port 1521)
+#   docker compose --profile postgres up -d     # PostgreSQL 17              (port 5432)
+#   docker compose --profile mysql    up -d     # MySQL 8.4                  (port 3306)
+# Credentials come from .env (see .env.example). See SETUP.md.
+services:
+  oracle-free:
+    profiles: ["oracle"]
+    image: gvenzl/oracle-free:slim
+    container_name: oracle-free
+    ports:
+      - "${ORACLE_PORT:-1521}:1521"
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD:-ChangeMe_Sys_1}
+      APP_USER: ${APP_USER:-app}
+      APP_USER_PASSWORD: ${APP_PASSWORD:-app}
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+  postgres:
+    profiles: ["postgres"]
+    image: postgres:17
+    container_name: postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${APP_USER:-app}
+      POSTGRES_PASSWORD: ${APP_PASSWORD:-app}
+      POSTGRES_DB: ${APP_DB:-app}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${APP_USER:-app} -d ${APP_DB:-app}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mysql:
+    profiles: ["mysql"]
+    image: mysql:8.4
+    container_name: mysql
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-ChangeMe_Root_1}
+      MYSQL_USER: ${APP_USER:-app}
+      MYSQL_PASSWORD: ${APP_PASSWORD:-app}
+      MYSQL_DATABASE: ${APP_DB:-app}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+volumes:
+  oracle-data:
+  postgres-data:
+  mysql-data:

@@ -1,0 +1,26 @@
+# expected_errors.txt - expected PRIMARY Oracle errors per script, read by check_results.sh
+#
+# Format: <script name without .sql> <TAB/spaces> <CODE:COUNT ...> or '-' for none
+# Rules:
+#  * Only the primary error of each error stack counts: a line starting with ORA-, PLS- or SP2-
+#    (optionally preceded by "line/col" as in compile error listings).
+#  * Continuation lines ORA-06512, ORA-04088, ORA-06508 and "Help: https://docs.oracle.com" lines
+#    are ignored. So a raised ORA-20010 followed by ORA-06512 and ORA-04088 counts as ONE ORA-20010.
+#  * Comparison is per code and per count; any extra, missing or differently counted code = FAIL.
+#  * Lines starting with '#' and blank lines are ignored. A script missing from this file is
+#    treated as expecting no errors ('-').
+#  * When you add a test that raises an error on purpose, add its code here (see .github/README.md).
+#
+# script                    expected errors (code:count), '-' = none
+00_reset                    -
+01_tables                   -
+02_data                     -
+03_denormalization          -
+04_triggers                 -
+05_tests                    ORA-20001:2 ORA-20002:2 ORA-20003:1
+06_logical_optimization     -
+07_test_logical             ORA-02290:1 ORA-20010:1 ORA-20011:1 ORA-20012:1
+08_generate_data            -
+09_indexes                  -
+10_partitioning             -
+11_test_partitioning        ORA-20021:1

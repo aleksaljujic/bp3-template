@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "Oracle.sql-developer",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-pg",
+    "mtxr.sqltools-driver-mysql",
+    "ms-azuretools.vscode-docker",
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-mermaid",
+    "hediet.vscode-drawio"
+  ]
+}

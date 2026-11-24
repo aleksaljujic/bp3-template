@@ -1,0 +1,59 @@
+name: oracle-tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  oracle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      oracle:
+        image: gvenzl/oracle-free:slim
+        env:
+          ORACLE_PASSWORD: ChangeMe_Sys_1
+          APP_USER: app
+          APP_USER_PASSWORD: app
+        ports:
+          - 1521:1521
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 30
+          --health-start-period 60s
+    steps:
+      - uses: actions/checkout@v4
+
+      # run_all.sh talks to the database with `docker exec <container> sqlplus`, so it needs a
+      # container NAME (it checks `docker ps --format '{{.Names}}'`). A service container has a
+      # generated name, so we look it up by image and pass it as CONTAINER. This is simpler than
+      # starting a second DB with `docker compose --profile oracle up -d`.
+      - name: Find the service container and wait until it is healthy
+        run: |
+          name="$(docker ps --filter ancestor=gvenzl/oracle-free:slim --format '{{.Names}}' | head -n 1)"
+          test -n "$name" || { echo "Oracle service container not found"; docker ps -a; exit 1; }
+          echo "CONTAINER=$name" >> "$GITHUB_ENV"
+          for i in $(seq 1 60); do
+            status="$(docker inspect --format '{{.State.Health.Status}}' "$name")"
+            echo "health: $status"
+            [ "$status" = healthy ] && exit 0
+            sleep 10
+          done
+          docker logs "$name" | tail -n 50
+          exit 1
+
+      - name: Run all scripts
+        run: ./run_all.sh
+
+      - name: Check results against expected_errors.txt
+        run: ./check_results.sh -v
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results
+          path: results/
+          if-no-files-found: warn
