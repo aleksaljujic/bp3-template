@@ -3,7 +3,7 @@
 ## What this repo is
 
 A template for a university "Databases 3" project on Oracle Database 23ai Free (example model:
-orders and invoicing). Pipeline: `assignment -> prompt -> spec -> queries -> results -> explanations`.
+orders and invoicing). Pipeline: `inputs -> assignment -> prompt -> spec -> queries -> results -> explanations`.
 Work follows the rulebook [`spec/00_spec_workflow.md`](spec/00_spec_workflow.md): spec first, human
 approval, requirements R-xx, tasks K-xx, parallel subagents, integration run, review, human approval.
 Use `/spec` to drive it.
@@ -12,6 +12,7 @@ Use `/spec` to drive it.
 
 | Path | Purpose |
 |---|---|
+| `inputs/` | Photos/scans of the student's documents and assignments (git-ignored); see `inputs/README.md` |
 | `assignments/` | Generic assignments (task, deliverables, notes) |
 | `prompts/` | Prompts that produce specs (`prompts/NN_x.md` -> `spec/NN_x.md`) |
 | `spec/` | Rulebook `00_spec_workflow.md` and the specs (contract for the scripts) |
